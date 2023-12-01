@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ObjectId = mongoose.Schema.Types.ObjectId
 
 const blogschema = new mongoose.Schema( { 
     tittle : {
@@ -9,8 +10,9 @@ const blogschema = new mongoose.Schema( {
         type : String,
         required : true
     },
-    author_name : {
-        type : String,
+    authorId : {
+        type : ObjectId,
+        ref : 'user',
         required : true
     },
     category : {
