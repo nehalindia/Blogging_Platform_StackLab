@@ -41,10 +41,10 @@ const createBlog = async function(req,res){
 }
 
 
+/***************** AllBlog *************/ 
 const getBlog = async function(req,res){
     try{
-        /***************** AllBlog *************/ 
-        const blogs = await blogModel.find()
+        const blogs = await blogModel.find({isDeleted : false})
 
         res.status(200).send({
             status : true,
@@ -60,19 +60,20 @@ const getBlog = async function(req,res){
 }
 
 
+/***************** Searching Blog by Id *************/
 const getBlogById = async function(req,res){
     try{
-       /***************** Searching Blog by Id *************/
-       let { BlogId } = req.params
-       console.log(BlogId)
-       if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
+        // validating the params value
+        let { BlogId } = req.params
+       
+        if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
            return res.status(400).send({
                status: false,
                message: "Enter valid BlogId"
            })
-       }
+        }
         
-        const blog = await blogModel.findById(BlogId)
+        const blog = await blogModel.findOne({_id:BlogId, isDeleted : false})
         res.status(200).send({
             status : true,
             message: "Blog", 
@@ -90,6 +91,74 @@ const getBlogById = async function(req,res){
 
 const updateBlog = async function(req,res){
     try{
+        // validating the params value
+        let { BlogId } = req.params
+        console.log(BlogId)
+        if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
+            return res.status(400).send({
+                status: false,
+                message: "Enter valid BlogId"
+            })
+        }
+
+        const blog = await blogModel.findOne({_id : BlogId, isDeleted : false})
+        if(!blog){
+            return res.status(404).send({
+                status: false,
+                message: "blog not Found"
+            })
+        }
+
+        // checking user authorization
+        if(blog.authorId != req.userId){
+            return res.status(403).send({
+                status:false, 
+                message: "Unauthorized"
+            })
+        }
+
+        // validating and updateing data
+        if(!isValidRequestBody(req.body)){
+            return res.status(400).send({status :false, message: "Must add data"})
+        }
+    
+        let {tittle, body, category} = req.body
+        if(tittle){
+            if(!isValid(tittle)){
+                return res.status(400).send({
+                    status: false,
+                    message: "provide valid title"
+                })
+            }
+            blog.tittle = tittle
+        }
+
+        if(body){
+            if(!isValid(body)){
+                return res.status(400).send({
+                    status: false,
+                    message: "provide valid body"
+                })
+            }
+            blog.body = body
+        }
+
+        if(category){
+            if(!isValid(category)){
+                return res.status(400).send({
+                    status: false,
+                    message: "provide valid category"
+                })
+            }
+            blog.category = category
+        }
+
+        let data  = await blog.save()
+        res.status(200).send({
+            status: true,
+            message: "blog Updated",
+            data : data
+        })
 
     }catch(error){
         res.status(500).send({
@@ -102,7 +171,22 @@ const updateBlog = async function(req,res){
 
 const deleteBlog = async function(req,res){
     try{
+        let { BlogId } = req.params
+        console.log(BlogId)
+        if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
+            return res.status(400).send({
+                status: false,
+                message: "Enter valid BlogId"
+            })
+        }
 
+        const blog = await blogModel.findById(BlogId)
+        if(blog.authorId != req.userId){
+            return res.status(403).send({
+                status:false, 
+                message: "Unauthorized"
+            })
+        }
     }catch(error){
         res.status(500).send({
             status : false,

@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 require('dotenv').config
 
 
-
+/*********************** authenticate Api only allow signin user ***********************/
 const authenticate = async function(req,res,next){
     try {
 
@@ -18,6 +18,7 @@ const authenticate = async function(req,res,next){
         let Token = req.headers.authorization.split(" ")[1]
         if(!Token) {return res.status(400).send({status: false, message: "Token is not present" })}
 
+        /******************* Verifying the token ****************/
         jwt.verify(Token, process.env.JWT_SECRET_KEY, async (err, decoded) => {
             if(err){return res.status(403).send({status:false,message:"Invalid token! author"}) }
         // if(!decode){return res.status(401).send({status:false, message: "Token is not valid"})}
