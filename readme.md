@@ -3,17 +3,14 @@
 </p>
 
 <h2>Model</h2>
-<p> </p>
+<p> I have created two controller user and blog model.</p>
 
 <h2> Controller </h2>
-<h3> Admin Controller </h3>
-<p></p>
-
-<h3> Slot Controller </h3>
-<p> </p>
-
 <h3> User Controller </h3>
-<p></p>
+<p>In user controller i define the api to signup for new user and login for existing user.</p>
+
+<h3> Blog Controller </h3>
+<p> </p>
 
 <h2> MiddleWare</h2>
 <h3> Auth </h3>
