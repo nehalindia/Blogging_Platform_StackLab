@@ -64,6 +64,7 @@ const getBlogById = async function(req,res){
     try{
        /***************** Searching Blog by Id *************/
        let { BlogId } = req.params
+       console.log(BlogId)
        if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
            return res.status(400).send({
                status: false,

@@ -35,6 +35,5 @@ const authenticate = async function(req,res,next){
 }
 
 module.exports = {
-    authenticate,
-
+    authenticate
 }

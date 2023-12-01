@@ -10,8 +10,8 @@ router.post('/login', userLogin)
 
 router.post('/createBlog', authenticate, createBlog)
 router.get('/getblog', getBlog)
-router.get('/getblogbyid', getBlogById)
-router.post('/update', authenticate, updateBlog)
-router.post('/delete', authenticate, deleteBlog)
+router.get('/getblogbyid/:BlogId', getBlogById)
+router.post('/update/:BlogId', authenticate, updateBlog)
+router.post('/delete/:BlogId', authenticate, deleteBlog)
 
 module.exports = router
