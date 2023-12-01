@@ -89,11 +89,12 @@ const getBlogById = async function(req,res){
 }
 
 
+/********************* updateing the blog ***************/
 const updateBlog = async function(req,res){
     try{
         // validating the params value
         let { BlogId } = req.params
-        console.log(BlogId)
+        // console.log(BlogId)
         if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
             return res.status(400).send({
                 status: false,
@@ -153,6 +154,7 @@ const updateBlog = async function(req,res){
             blog.category = category
         }
 
+        // sending updated data to database
         let data  = await blog.save()
         res.status(200).send({
             status: true,
@@ -169,10 +171,12 @@ const updateBlog = async function(req,res){
 }
 
 
+/********************* deleteing the blog *************/
 const deleteBlog = async function(req,res){
     try{
+        // validating the params value
         let { BlogId } = req.params
-        console.log(BlogId)
+        // console.log(BlogId)
         if(!isValid(BlogId) || !ObjectId.isValid(BlogId)){
             return res.status(400).send({
                 status: false,
@@ -180,13 +184,31 @@ const deleteBlog = async function(req,res){
             })
         }
 
-        const blog = await blogModel.findById(BlogId)
+        const blog = await blogModel.findOne({_id : BlogId, isDeleted : false})
+        if(!blog){
+            return res.status(404).send({
+                status: false,
+                message: "blog not Found"
+            })
+        }
+
+        // checking user authorization
         if(blog.authorId != req.userId){
             return res.status(403).send({
                 status:false, 
                 message: "Unauthorized"
             })
         }
+
+        blog.isDeleted = true
+        
+        let data  = await blog.save()
+        res.status(200).send({
+            status: true,
+            message: "blog deleted",
+            // data : data
+        })
+
     }catch(error){
         res.status(500).send({
             status : false,

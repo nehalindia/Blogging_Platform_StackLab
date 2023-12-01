@@ -35,6 +35,23 @@ const authenticate = async function(req,res,next){
     }
 }
 
+
+/****************** log incoming request ****************/
+const requestlog = async function(req,res,next){
+    try{
+        console.log("Incoming Request Info:-")
+        console.log(`[${new Date().toISOString()}] ${req.method} ${req.url} ${req.hostname}`);
+        next();
+
+    }catch (error) {
+        res.status(500).send({
+            status : false, 
+            message : error.message
+        })
+    }
+}
+
 module.exports = {
-    authenticate
+    authenticate,
+    requestlog
 }
