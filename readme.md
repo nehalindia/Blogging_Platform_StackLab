@@ -29,7 +29,7 @@ Rest of three are protected api for creation updation and deletion of blog. </p>
 i have created an api to log the every incoming request.</p>
 
 
-<h1>How to use it</h1>
+<h1>How to use this app localy</h1>
 <h3> Add .env file and their credentials with following key name</h3>
 <p>PORT =</p>
 <p>MONGO_URI =</p>
